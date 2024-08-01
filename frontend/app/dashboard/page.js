@@ -72,6 +72,25 @@ const Dashboard = () => {
       const res = await add.json();
       toast.success(res.msg);
       // console.log(res);
+      const response = await fetch(
+        "http://localhost:5000/api/tasks/getAllTasks",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setTasks(data);
+      } else {
+        toast.error("Failed to load tasks:", response.statusText);
+        // You might want to handle this error, e.g., show a user-friendly message
+      }
+    
       setNewTask("");
       setNewTaskTime("");
     } else {
@@ -201,8 +220,8 @@ const Dashboard = () => {
         />
         <input
           type="text"
-          className="border border-gray-300 p-2 w-24 rounded-r ml-2"
-          placeholder="Time"
+          className="border border-gray-300 p-2 w-32 rounded-r ml-2"
+          placeholder="Time(in hours)"
           value={newTaskTime}
           onChange={(e) => setNewTaskTime(e.target.value)}
         />
